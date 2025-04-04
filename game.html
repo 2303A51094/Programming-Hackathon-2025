@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math Challenge Game</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .game-box {
+      margin-top: 20px;
+    }
+
+    .game-question {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+
+    .score-time {
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    .game-input {
+      width: 100px;
+      padding: 10px;
+      font-size: 18px;
+      text-align: center;
+      border: 2px solid #007bff;
+      border-radius: 10px;
+    }
+
+    .game-over {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-button">Back</a>
+    <h1>🧠 Math Challenge</h1>
+
+    <div class="game-box">
+      <p class="score-time">Question <span id="current-q">1</span> of <span id="total-q">5</span> | ✅ Score: <span id="score">0</span></p>
+      <div class="game-question" id="question">Press Start to Begin!</div>
+      <input type="number" id="answer" class="game-input" placeholder="Your Answer" disabled />
+      <br><br>
+      <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <div id="game-over" class="game-over" style="display: none;"></div>
+  </div>
+
+  <script>
+    let questions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let totalQuestions = 5;
+
+    function generateQuestions(count = 5) {
+      const ops = ["+", "-", "*"];
+      const generated = [];
+      for (let i = 0; i < count; i++) {
+        let num1 = Math.floor(Math.random() * 20);
+        let num2 = Math.floor(Math.random() * 20);
+        let op = ops[Math.floor(Math.random() * ops.length)];
+        let question = `${num1} ${op} ${num2}`;
+        let answer = eval(question);
+        generated.push({ question, answer });
+      }
+      return generated;
+    }
+
+    function startGame() {
+      score = 0;
+      currentIndex = 0;
+      questions = generateQuestions(totalQuestions);
+      document.getElementById("score").innerText = score;
+      document.getElementById("game-over").style.display = "none";
+      document.getElementById("answer").disabled = false;
+      document.getElementById("answer").value = '';
+      document.getElementById("answer").focus();
+      document.getElementById("total-q").innerText = totalQuestions;
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      const current = questions[currentIndex];
+      document.getElementById("question").innerText = current.question + " = ?";
+      document.getElementById("current-q").innerText = currentIndex + 1;
+      document.getElementById("answer").value = '';
+      document.getElementById("answer").focus();
+    }
+
+    document.getElementById("answer").addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        const userAnswer = parseInt(this.value);
+        if (userAnswer === questions[currentIndex].answer) {
+          score++;
+          document.getElementById("score").innerText = score;
+        }
+        currentIndex++;
+        if (currentIndex < totalQuestions) {
+          loadQuestion();
+        } else {
+          document.getElementById("answer").disabled = true;
+          document.getElementById("question").innerText = "Well Done!";
+          document.getElementById("game-over").style.display = "block";
+          document.getElementById("game-over").innerText = `Game Over! 🎉 You scored ${score} out of ${totalQuestions}!`;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

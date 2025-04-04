@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Ease</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+
+      <!-- Login Section -->
+      <div id="loginSection" style="display: none;">
+        <h1>Login</h1>
+        <input type="text" id="username" placeholder="Username" />
+        <input type="password" id="password" placeholder="Password" />
+        <button onclick="login()">Log In</button>
+        <div class="note">Don't have an account? Coming soon!</div>
+      </div>
+
+      <!-- Main App Section -->
+      <div id="mainContent" style="display: none;">
+        <div class="top-bar">
+          <h1>🏠 Sign Ease</h1>
+          <div class="user-icon" onclick="handleUserClick()">👤</div>
+        </div>
+        <div class="grid">
+          <a href="gujarati.html" class="box">Learn Gujarati</a>
+          <a href="math.html" class="box">Practice Basic Math</a>
+          <a href="sign.html" class="box">Simulate Sign to Text</a>
+          <a href="report.html" class="box">Report Card</a>
+          <a href="quiz.html" class="box">Take a Quiz</a>
+          <a href="stories.html" class="box">Gujarati Stories</a>
+          <a href="game.html" class="box">Play Game</a>
+        </div>
+      </div>
+
+      <!-- Profile Section -->
+      <div id="profileSection" style="display: none;">
+        <h1>User Profile</h1>
+        <p><strong>Username:</strong> <span id="displayUsername"></span></p>
+        <button onclick="logout()">Log Out</button>
+        <button onclick="goHome()">Back to Home</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+
+      if (!user || !pass) {
+        alert("Please enter both username and password.");
+        return;
+      }
+
+      localStorage.setItem("loggedIn", "true");
+      localStorage.setItem("username", user);
+
+      showMain();
+    }
+
+    function handleUserClick() {
+      const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+
+      if (!isLoggedIn) {
+        showLogin();
+      } else {
+        const username = localStorage.getItem("username");
+        document.getElementById("displayUsername").innerText = username;
+        showProfile();
+      }
+    }
+
+    function showLogin() {
+      hideAll();
+      document.getElementById("loginSection").style.display = "block";
+    }
+
+    function showMain() {
+      hideAll();
+      document.getElementById("mainContent").style.display = "block";
+    }
+
+    function showProfile() {
+      hideAll();
+      document.getElementById("profileSection").style.display = "block";
+    }
+
+    function goHome() {
+      showMain();
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedIn");
+      localStorage.removeItem("username");
+      showLogin();
+    }
+
+    function hideAll() {
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("mainContent").style.display = "none";
+      document.getElementById("profileSection").style.display = "none";
+    }
+
+    // Initialize
+    window.onload = function () {
+      const isLoggedIn = localStorage.getItem("loggedIn") === "true";
+      if (isLoggedIn) {
+        showMain();
+      } else {
+        showLogin();
+      }
+    };
+  </script>
+</body>
+</html>

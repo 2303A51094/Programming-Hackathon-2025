@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gujarati Quiz</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .quiz-option {
+      display: flex;
+      align-items: left;
+      background: #f1f1f1;
+      padding: 10px 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .quiz-option:hover {
+      background: #e0e0e0;
+    }
+
+    .quiz-option input {
+      margin-right: 10px;
+      accent-color: #007bff;
+    }
+
+    #quiz-container button, #result button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #quiz-container button:hover, #result button:hover {
+      background: #0056b3;
+    }
+
+    h1, h2, p {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-button">Back</a>
+    <h1>Gujarati Quiz</h1>
+    
+    <div id="quiz-container">
+      <p id="question"></p>
+      <div id="options"></div>
+      <button onclick="nextQuestion()">Next</button>
+    </div>
+
+    <div id="result" style="display: none;">
+      <h2>Quiz Completed!</h2>
+      <p id="score"></p>
+      <button onclick="restartQuiz()">Try Again</button>
+    </div>
+  </div>
+
+  <script>
+    const quiz = [
+      {
+        question: "What is the Gujarati word for 'Apple'?",
+        options: ["સફરજન", "કેળું", "દ્રાક્ષ", "આમલી"],
+        answer: "સફરજન"
+      },
+      {
+        question: "What is the meaning of 'પંખી'?",
+        options: ["Fish", "Bird", "Mouse", "Tree"],
+        answer: "Bird"
+      },
+      {
+        question: "How do you say 'Water' in Gujarati?",
+        options: ["પાણી", "દૂધ", "રસ", "ચા"],
+        answer: "પાણી"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = quiz[currentQuestion];
+      document.getElementById("question").innerText = q.question;
+      const options = q.options.map((opt, index) => {
+        const inputId = `option${index}`;
+        return `
+          <div class="quiz-option">
+            <input type="radio" id="${inputId}" name="option" value="${opt}" />
+            <label for="${inputId}">${opt}</label>
+          </div>
+        `;
+      }).join("");
+      document.getElementById("options").innerHTML = options;
+    }
+
+    function nextQuestion() {
+      const selected = document.querySelector('input[name="option"]:checked');
+      if (selected && selected.value === quiz[currentQuestion].answer) {
+        score++;
+      }
+
+      currentQuestion++;
+
+      if (currentQuestion < quiz.length) {
+        loadQuestion();
+      } else {
+        document.getElementById("quiz-container").style.display = "none";
+        document.getElementById("result").style.display = "block";
+        document.getElementById("score").innerText = `You got ${score} out of ${quiz.length} correct!`;
+      }
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("result").style.display = "none";
+      document.getElementById("quiz-container").style.display = "block";
+      loadQuestion();
+    }
+
+    window.onload = loadQuestion;
+  </script>
+</body>
+</html>
